@@ -39,7 +39,7 @@ for start, end in slot_graph.edges():
     edge_attr[(start, end)] = slot_graph[start][end]['weight']
 edge_attr_matrix = pd.DataFrame(edge_attr).T
 edge_attr_matrix = edge_attr_matrix.sample(frac=1).astype(np.float32)
-edge_attr_norm = pd.DataFrame(normalize(edge_attr_matrix))
+edge_attr_norm = pd.DataFrame(normalize(edge_attr_matrix, norm='max'))
 edge_attr_norm.index = edge_attr_matrix.index
 
 # Node attributes matrix
@@ -55,7 +55,7 @@ for i in range(NODE_NUM):
     node_attr[i] = row
 node_attr_matrix = pd.DataFrame(node_attr).T
 node_attr_matrix = node_attr_matrix.sort_index().astype(np.float32)
-node_attr_norm = pd.DataFrame(normalize(node_attr_matrix))
+node_attr_norm = pd.DataFrame(normalize(node_attr_matrix, norm='max'))
 node_attr_norm.index = node_attr_matrix.index
 
 # Neighborhood matrix
@@ -70,7 +70,7 @@ for i in range(NODE_NUM):
     row_series.index = range(row_series.shape[0])
     neig.append(row_series)
 neig_matrix = pd.DataFrame(neig)
-neig_norm = pd.DataFrame(normalize(neig_matrix))
+neig_norm = pd.DataFrame(normalize(neig_matrix, norm='max'))
 neig_norm.index = neig_matrix.index
 
 
@@ -165,7 +165,7 @@ def next_batch(edge_attr, batch_size, steps):
     if start > end:
         result = pd.concat([edge_attr.iloc[start:], edge_attr.iloc[:end]])
     else:
-        result = edge_attr_matrix.iloc[start:end]
+        result = edge_attr.iloc[start:end]
     return result
 
 
