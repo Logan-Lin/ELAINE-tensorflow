@@ -252,12 +252,10 @@ class ELAINE:
         Calculate nodes and labels' reconstruction losses and latent losses,
         then combine them into final loss.
         """
-        l_reconstr_loss = -tf.reduce_sum(self.l_node_input * tf.log(1e-10 + self.l_reconstr_mean)
-                                         + (1-self.l_node_input) *
-                                         tf.log(1e-10 + 1 - self.l_reconstr_mean), 1)
-        r_reconstr_loss = -tf.reduce_sum(self.r_node_input * tf.log(1e-10 + self.r_reconstr_mean)
-                                         + (1-self.r_node_input) *
-                                         tf.log(1e-10 + 1 - self.r_reconstr_mean), 1)
+        l_reconstr_loss = tf.reduce_sum(tf.losses.mean_squared_error(
+            self.l_node_input, self.l_reconstr_mean), 1)
+        r_reconstr_loss = tf.reduce_sum(tf.losses.mean_squared_error(
+            self.r_node_input, self.r_reconstr_mean), 1)
 
         l_latent_loss = -tf.reduce_sum(1 + self.l_z_log_sigma_sq
                                        - tf.square(self.l_z_mean)
