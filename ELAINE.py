@@ -264,9 +264,8 @@ class ELAINE:
                                        - tf.square(self.r_z_mean)
                                        - tf.exp(self.r_z_log_sigma_sq), 1)
 
-        edge_reconstr_loss = -tf.reduce_sum(self.edge_attr * tf.log(1e-10 + self.edge_reconstr_mean)
-                                            + (1-self.edge_attr) *
-                                            tf.log(1e-10 + 1 - self.edge_reconstr_mean), 1)
+        edge_reconstr_loss = tf.reduce_sum(tf.losses.mean_squared_error(
+            self.l_node_input, self.l_reconstr_mean), 1)
 
         self.cost = \
             NODE_ATTR_LOSS_WEIGHT * tf.reduce_sum(0.5 * l_reconstr_loss + 0.5 * r_reconstr_loss) + \
