@@ -19,6 +19,8 @@ with open('model/kmeans.pkl', 'rb') as kmeans_file:
 # Contruct graph
 od_set_label = pd.DataFrame(od_set, copy=True)
 od_set_label['cluster'] = kmeans.predict(od_set[['longitude', 'latitude']])
+graph = nx.DiGraph()
+utils.add_dataset_to_graph(od_set_label, graph)
 slot_graph = nx.DiGraph()
 utils.add_timeslot_weight_to_graph(od_set_label, slot_graph)
 
